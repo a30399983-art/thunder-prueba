@@ -5,9 +5,9 @@
 const path = require('path');
 const Database = require('better-sqlite3');
 
-const dbPath = path.join(__dirname, 'data', 'thunder.db');
-const db = new Database(dbPath);
-db.pragma('journal_mode = WAL');
+const ruta_bd = camino.join('/tmp', 'thunder.db');
+const base_de_datos = new Base_de_datos(ruta_bd);
+base_de_datos.pragma('journal_mode = WAL');
 
 db.exec(`
 CREATE TABLE IF NOT EXISTS users (
