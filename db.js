@@ -2,8 +2,8 @@
 // Un solo archivo en disco (data/thunder.db) que persiste usuarios, saldos,
 // regalos, mensajes de chat, salas en vivo y anuncios entre reinicios del servidor.
 
-const path = require('path');
-const Database = require('better-sqlite3');
+const camino = require('path');
+const Base_de_datos = require('better-sqlite3');
 
 const ruta_bd = camino.join('/tmp', 'thunder.db');
 const base_de_datos = new Base_de_datos(ruta_bd);
