@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="Thunder — vivos con regalos animados, comunidades estilo Discord y marketplace con anuncios, todo en un solo ecosistema.">
+<meta name="theme-color" content="#0B0E11">
+<meta name="color-scheme" content="dark">
+<title>Thunder — Vivos, Comunidades y Marketplace</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B0E11'/%3E%3Cg fill='none' stroke='%230AFFEF' stroke-width='3.2' stroke-linecap='round'%3E%3Cpath d='M7 15 Q32 7 57 15'/%3E%3Cpath d='M11 24 Q32 19 53 24'/%3E%3Cpath d='M16 33 Q32 30 48 33'/%3E%3Cpath d='M21 42 Q32 40 43 42'/%3E%3Cpath d='M26 50 Q32 49 38 50'/%3E%3C/g%3E%3Cpath d='M37 5 L24 32 L32 32 L27 59 L47 27 L37 27 Z' fill='%23FFD447'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#0B0E11;
+    --bg-1:#121820;
+    --bg-2:#171F28;
+    --bg-3:#1D2731;
+    --line:rgba(10,255,239,.14);
+    --line-strong:rgba(10,255,239,.32);
+    --turq:#0AFFEF;
+    --turq-dim:#07C9BD;
+    --turq-deep:#04635F;
+    --gold:#FFD447;
+    --gold-deep:#8A6A12;
+    --text-hi:#EAF6F5;
+    --text-mid:#9FB3B6;
+    --text-low:#5E7376;
+    --danger:#FF5D6C;
+    --radius-l:16px;
+    --radius-m:12px;
+    --radius-s:8px;
+    --glow: 0 0 14px rgba(10,255,239,.55);
+    --glow-soft: 0 0 22px rgba(10,255,239,.22);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:
+      radial-gradient(1100px 640px at 14% -8%, rgba(10,255,239,.09), transparent 55%),
+      radial-gradient(900px 520px at 100% 0%, rgba(255,212,71,.05), transparent 50%),
+      linear-gradient(180deg,var(--bg-0),var(--bg-1) 60%, var(--bg-0));
+    color:var(--text-hi);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,h4,.brand,.nav-label,.section-title{font-family:'Space Grotesk',sans-serif;}
+  ::selection{background:rgba(10,255,239,.28);}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit; cursor:pointer; border:none; background:none; color:inherit;}
+  ::-webkit-scrollbar{width:8px;height:8px;}
+  ::-webkit-scrollbar-thumb{background:rgba(10,255,239,.25); border-radius:8px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+
+  /* ============ APP SHELL ============ */
+  .app{display:grid; grid-template-columns:1fr; min-height:100vh;}
+  @media (min-width:900px){ .app{grid-template-columns:220px 1fr;} }
+
+  .sidebar{
+    display:none;
+    position:sticky; top:0; height:100vh;
+    background:linear-gradient(180deg, rgba(18,24,32,.9), rgba(11,14,17,.96));
+    border-right:1px solid var(--line);
+    flex-direction:column;
+    padding:20px 10px;
+    z-index:40;
+  }
+  @media (min-width:900px){ .sidebar{display:flex;} }
+  .brand{
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    padding:8px 8px 26px 8px;
+    font-weight:700; letter-spacing:.2px;
+  }
+  .brand .logo-icon, .auth-brand .logo-icon{
+    width:38px; height:38px; flex:0 0 auto;
+    filter:drop-shadow(0 0 7px rgba(10,255,239,.55));
+  }
+  .brand .wordmark{
+    display:none; font-size:14px; letter-spacing:3px; color:var(--text-hi);
+  }
+  @media (min-width:900px){ .brand .wordmark{display:inline;} }
+
+  .navlist{display:flex; flex-direction:column; gap:4px; flex:1;}
+  .navitem{
+    display:flex; align-items:center; gap:12px;
+    padding:11px 12px; border-radius:var(--radius-m);
+    color:var(--text-mid); font-size:14.5px; font-weight:500;
+    transition:background .15s ease, color .15s ease;
+    justify-content:center;
+  }
+  @media (min-width:900px){ .navitem{justify-content:flex-start;} }
+  .navitem .ic{width:20px; text-align:center; flex:0 0 auto; font-size:17px;}
+  .navitem .nav-label{display:none;}
+  @media (min-width:900px){ .navitem .nav-label{display:inline;} }
+  .navitem:hover{background:rgba(10,255,239,.06); color:var(--text-hi);}
+  .navitem.active{background:rgba(10,255,239,.10); color:var(--turq); box-shadow:inset 0 0 0 1px var(--line-strong);}
+  .navitem.live{
+    background:var(--turq); color:var(--bg-0); font-weight:700;
+    box-shadow:var(--glow); margin:6px 0;
+  }
+  .navitem.live:hover{background:var(--turq);}
+  .navitem.live.active{background:var(--turq); color:var(--bg-0); box-shadow:var(--glow);}
+
+  .sidebar-foot{
+    border-top:1px solid var(--line); padding-top:14px; margin-top:8px;
+    display:flex; align-items:center; gap:10px; padding-left:8px;
+  }
+  .avatar{
+    width:34px;height:34px; border-radius:50%; flex:0 0 auto;
+    background:linear-gradient(135deg,var(--turq),#0A6E68);
+    display:grid; place-items:center; font-weight:700; color:var(--bg-0); font-size:13px;
+  }
+  .who{display:none; line-height:1.25;}
+  @media (min-width:900px){ .who{display:block;} }
+  .who .name{font-size:13.5px; font-weight:600;}
+  .who .role{font-size:11.5px; color:var(--text-low);}
+
+  main{min-width:0;}
+  .view{display:none; padding:22px 18px 96px;}
+  .view.active{display:block;}
+  @media (min-width:900px){ .view{padding:28px 34px 70px;} }
+
+  /* ============ BOTTOM NAV (mobile) ============ */
+  .bottom-nav{
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    display:flex; align-items:center; justify-content:space-around;
+    padding:8px 8px calc(8px + env(safe-area-inset-bottom));
+    background:linear-gradient(180deg, rgba(18,24,32,.88), rgba(11,14,17,.97));
+    border-top:1px solid var(--line);
+    backdrop-filter:blur(10px);
+  }
+  @media (min-width:900px){ .bottom-nav{display:none;} }
+  .bn-item{
+    display:flex; flex-direction:column; align-items:center; gap:3px;
+    color:var(--text-mid); font-size:10px; font-weight:600;
+    padding:6px 10px; border-radius:10px; flex:1;
+  }
+  .bn-item .ic{font-size:18px;}
+  .bn-item.active{color:var(--turq);}
+  .bn-item.live{
+    color:var(--bg-0); background:var(--turq); box-shadow:var(--glow);
+    transform:translateY(-10px); padding:10px 14px; border-radius:16px;
+  }
+  .bn-item.live .ic{font-size:20px;}
+  .bn-item.live.active{color:var(--bg-0);}
+  .view-head{display:flex; align-items:baseline; justify-content:space-between; gap:14px; margin-bottom:20px; flex-wrap:wrap;}
+  .view-head h1{font-size:22px; font-weight:700;}
+  .view-head p{color:var(--text-mid); font-size:13.5px; margin-top:2px;}
+
+  .pill{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:5px 11px; border-radius:99px; font-size:12px; font-weight:600;
+    border:1px solid var(--line-strong); color:var(--turq); background:rgba(10,255,239,.06);
+  }
+  .btn{
+    padding:10px 16px; border-radius:var(--radius-m); font-size:13.5px; font-weight:600;
+    border:1px solid var(--line); color:var(--text-hi); background:var(--bg-2);
+    transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn:hover{transform:translateY(-1px); border-color:var(--line-strong);}
+  .btn-primary{background:var(--turq); color:var(--bg-0); border-color:transparent; box-shadow:0 0 0 rgba(0,0,0,0);}
+  .btn-primary:hover{box-shadow:var(--glow);}
+  .btn-gold{background:linear-gradient(135deg,var(--gold),#E0A82E); color:#2A1E02; border-color:transparent;}
+  .btn-gold:hover{box-shadow:0 0 16px rgba(255,212,71,.5);}
+  .btn-ghost{background:transparent;}
+  .btn-sm{padding:7px 12px; font-size:12.5px; border-radius:9px;}
+
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,.015), transparent), var(--bg-2);
+    border:1px solid var(--line); border-radius:var(--radius-l);
+  }
+
+  /* ============ HOME ============ */
+  .grid-lives{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:16px;}
+  .live-thumb{
+    border-radius:var(--radius-l); overflow:hidden; cursor:pointer;
+    border:1px solid var(--line); background:var(--bg-2);
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .live-thumb:hover{transform:translateY(-3px); border-color:var(--line-strong);}
+  .thumb-media{
+    height:128px; position:relative;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(10,255,239,.22), transparent 55%),
+      radial-gradient(circle at 80% 80%, rgba(255,212,71,.12), transparent 50%),
+      linear-gradient(160deg,#182631,#0C1116);
+  }
+  .badge-live{
+    position:absolute; top:10px; left:10px;
+    background:var(--danger); color:#fff; font-size:10.5px; font-weight:700;
+    padding:3px 8px; border-radius:6px; letter-spacing:.3px;
+    display:flex; align-items:center; gap:5px;
+  }
+  .badge-live .dot{width:6px;height:6px;border-radius:50%; background:#fff; animation:pulse 1.4s infinite;}
+  .badge-view{
+    position:absolute; bottom:9px; right:9px; background:rgba(11,14,17,.72);
+    font-size:11px; padding:3px 8px; border-radius:6px; backdrop-filter:blur(4px);
+  }
+  .thumb-info{padding:12px 13px 14px;}
+  .thumb-info .t{font-size:13.5px; font-weight:600; margin-bottom:3px;}
+  .thumb-info .s{font-size:12px; color:var(--text-mid);}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+
+  .section-title{font-size:15px; font-weight:700; margin:30px 0 14px; display:flex; align-items:center; gap:8px;}
+
+  .place-strip{display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:14px;}
+  .prod-card{border:1px solid var(--line); border-radius:var(--radius-m); background:var(--bg-2); overflow:hidden;}
+  .prod-media{height:100px; background:linear-gradient(150deg,#1B2733,#0E1319);}
+  .prod-body{padding:10px 11px;}
+  .prod-body .n{font-size:12.5px; font-weight:600;}
+  .prod-body .p{font-size:12.5px; color:var(--turq); font-weight:700; margin-top:3px;}
+
+  /* ============ THUNDER BIRDS (LIVE ROOM) ============ */
+  .live-layout{display:grid; grid-template-columns:1fr; gap:16px;}
+  @media (min-width:1080px){ .live-layout{grid-template-columns:1fr 320px;} }
+
+  .player-col{min-width:0;}
+  .player-topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; gap:10px; flex-wrap:wrap;}
+  .back-btn{display:flex; align-items:center; gap:8px; color:var(--text-mid); font-size:13px; font-weight:600;}
+  .back-btn:hover{color:var(--text-hi);}
+  .live-title{display:flex; align-items:center; gap:10px; font-weight:700; font-size:14.5px;}
+  .live-title .bolt-sm{color:var(--turq);}
+
+  .stage{
+    position:relative; border-radius:var(--radius-l); overflow:hidden;
+    aspect-ratio:16/9; border:1px solid var(--line);
+    background:
+      radial-gradient(circle at 25% 30%, rgba(10,255,239,.14), transparent 45%),
+      radial-gradient(circle at 75% 75%, rgba(255,212,71,.08), transparent 45%),
+      linear-gradient(150deg,#141C24,#080B0D);
+    isolation:isolate;
+  }
+  .stage-watermark{
+    position:absolute; inset:0; display:grid; place-items:center;
+    color:rgba(255,255,255,.08); font-family:'Space Grotesk'; font-weight:700; font-size:15vw; letter-spacing:2px;
+    pointer-events:none; user-select:none;
+  }
+  @media(min-width:1080px){.stage-watermark{font-size:60px;}}
+
+  .stage-hud-top{
+    position:absolute; top:0; left:0; right:0; padding:12px;
+    display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
+    background:linear-gradient(180deg, rgba(0,0,0,.45), transparent);
+  }
+  .streamer-chip{display:flex; align-items:center; gap:8px; background:rgba(11,14,17,.55); backdrop-filter:blur(6px); padding:6px 10px 6px 6px; border-radius:99px; border:1px solid rgba(255,255,255,.08);}
+  .streamer-chip .av{width:26px;height:26px;border-radius:50%; background:linear-gradient(135deg,var(--gold),#8A6A12); display:grid;place-items:center; font-size:11px; font-weight:700; color:#2a1e02;}
+  .streamer-chip .meta{line-height:1.2;}
+  .streamer-chip .meta .n{font-size:12.5px; font-weight:700;}
+  .streamer-chip .meta .v{font-size:10.5px; color:var(--text-mid);}
+  .stage-badges{display:flex; gap:8px;}
+  .live-badge-big{background:var(--danger); font-size:11px; font-weight:700; padding:5px 10px; border-radius:7px; display:flex; align-items:center; gap:6px;}
+  .live-badge-big .dot{width:6px;height:6px;border-radius:50%;background:#fff;animation:pulse 1.4s infinite;}
+  .viewers-big{background:rgba(11,14,17,.55); backdrop-filter:blur(6px); font-size:11.5px; padding:5px 10px; border-radius:7px; border:1px solid rgba(255,255,255,.08);}
+
+  /* gift alert bar (VIP) */
+  .alert-bar{
+    position:absolute; top:56px; left:50%; transform:translateX(-50%) translateY(-8px);
+    background:linear-gradient(90deg, rgba(10,255,239,.16), rgba(255,212,71,.12));
+    border:1px solid var(--line-strong); box-shadow:var(--glow);
+    padding:8px 18px; border-radius:99px; font-size:12.5px; font-weight:600;
+    display:flex; align-items:center; gap:8px; white-space:nowrap;
+    opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease;
+    z-index:5;
+  }
+  .alert-bar.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  .alert-bar b{color:var(--turq);}
+
+  /* fullscreen VIP overlay */
+  .vip-overlay{
+    position:absolute; inset:0; display:grid; place-items:center;
+    background:radial-gradient(circle at 50% 50%, rgba(255,212,71,.10), rgba(10,255,239,.10) 60%, rgba(5,7,9,.35));
+    opacity:0; pointer-events:none; transition:opacity .3s ease; z-index:6;
+  }
+  .vip-overlay.show{opacity:1;}
+  .vip-overlay .bolt-big{font-size:64px; filter:drop-shadow(0 0 18px rgba(255,212,71,.85)); animation:zap 1.1s ease-in-out infinite;}
+  @keyframes zap{0%,100%{transform:scale(1) rotate(-4deg);}50%{transform:scale(1.12) rotate(4deg);}}
+
+  /* basic gift floaters, bottom-right */
+  .gift-dock{position:absolute; right:10px; bottom:56px; width:150px; height:150px; pointer-events:none; z-index:4;}
+  .floater{
+    position:absolute; right:6px; bottom:0; font-size:26px;
+    animation:floatUp 2.4s ease-out forwards;
+    filter:drop-shadow(0 0 6px rgba(10,255,239,.5));
+  }
+  @keyframes floatUp{
+    0%{ transform:translateY(0) scale(.7); opacity:0; }
+    12%{ opacity:1; transform:translateY(-10px) scale(1); }
+    100%{ transform:translateY(-120px) scale(1.05); opacity:0; }
+  }
+  .combo-tag{
+    position:absolute; font-size:11px; font-weight:800; color:var(--turq);
+    text-shadow:0 0 8px rgba(10,255,239,.8);
+  }
+
+  .stage-hud-bottom{
+    position:absolute; left:0; right:0; bottom:0; padding:12px;
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+    background:linear-gradient(0deg, rgba(0,0,0,.5), transparent);
+  }
+  .hud-left{display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-mid);}
+  .hud-left b{color:var(--text-hi); font-weight:700;}
+  .hud-right{display:flex; align-items:center; gap:6px;}
+  .icon-btn{
+    width:32px;height:32px; border-radius:9px; display:grid; place-items:center;
+    background:rgba(11,14,17,.55); border:1px solid rgba(255,255,255,.08); font-size:14px;
+  }
+  .icon-btn:hover{background:rgba(11,14,17,.8);}
+
+  .action-bar{
+    margin-top:10px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    padding:10px 12px; border-radius:var(--radius-m); border:1px solid var(--line); background:var(--bg-2);
+  }
+  .action-item{
+    display:flex; align-items:center; gap:7px; font-size:13px; font-weight:600;
+    padding:8px 13px; border-radius:99px; color:var(--text-mid); border:1px solid transparent;
+  }
+  .action-item:hover{color:var(--text-hi); background:rgba(255,255,255,.03);}
+  .action-item.gift{
+    color:var(--bg-0); background:var(--turq); box-shadow:var(--glow); font-weight:700;
+  }
+  .action-item.gift:hover{transform:translateY(-1px);}
+  .action-item.sub{
+    color:var(--turq); border-color:var(--line-strong); background:rgba(10,255,239,.06);
+  }
+  .action-item.sub.active{
+    color:var(--bg-0); background:var(--turq); box-shadow:var(--glow); border-color:transparent;
+  }
+  .action-item.chat-toggle{display:none;}
+  @media (max-width:1079px){ .action-item.chat-toggle{display:flex;} }
+  .spacer{flex:1;}
+  .ad-btn{
+    margin-left:auto; color:var(--gold); border:1px solid rgba(255,212,71,.35); background:rgba(255,212,71,.06);
+  }
+
+  /* Gift shop sheet */
+  .sheet-backdrop{position:fixed; inset:0; background:rgba(5,7,9,.6); backdrop-filter:blur(3px); z-index:80; display:none;}
+  .sheet-backdrop.show{display:block;}
+  .sheet{
+    position:fixed; left:50%; bottom:0; transform:translate(-50%,0);
+    width:min(560px,92vw); max-height:78vh; overflow:auto;
+    background:var(--bg-1); border:1px solid var(--line-strong); border-bottom:none;
+    border-radius:18px 18px 0 0; padding:18px 18px 24px; z-index:81;
+    box-shadow:0 -10px 40px rgba(0,0,0,.5);
+  }
+  .sheet-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
+  .sheet-head h3{font-size:15.5px;}
+  .close-x{width:28px;height:28px; border-radius:8px; background:var(--bg-2); display:grid; place-items:center;}
+  .gift-tiers{display:flex; gap:8px; margin-bottom:14px;}
+  .tier-tab{flex:1; padding:8px; border-radius:9px; text-align:center; font-size:12px; font-weight:600; border:1px solid var(--line); color:var(--text-mid);}
+  .tier-tab.active{border-color:var(--line-strong); color:var(--turq); background:rgba(10,255,239,.06);}
+  .gift-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
+  @media(min-width:480px){.gift-grid{grid-template-columns:repeat(4,1fr);}}
+  .gift-item{
+    border:1px solid var(--line); border-radius:var(--radius-m); padding:12px 8px; text-align:center;
+    background:var(--bg-2); transition:border-color .15s, transform .15s;
+  }
+  .gift-item:hover{border-color:var(--line-strong); transform:translateY(-2px);}
+  .gift-item .em{font-size:26px; display:block; margin-bottom:6px;}
+  .gift-item .nm{font-size:11.5px; font-weight:600;}
+  .gift-item .cost{font-size:11px; color:var(--text-mid); margin-top:2px;}
+  .gift-item.gold .cost{color:var(--gold);}
+  .gift-item.green .cost{color:var(--turq);}
+
+  /* VIP side panel */
+  .vip-panel{
+    display:flex; flex-direction:column; border:1px solid var(--line); border-radius:var(--radius-l);
+    background:var(--bg-2); overflow:hidden; height:100%; min-height:520px;
+  }
+  .vip-tabs{display:flex; border-bottom:1px solid var(--line);}
+  .vip-tab{flex:1; padding:12px 6px; font-size:12px; font-weight:600; color:var(--text-mid); text-align:center; border-bottom:2px solid transparent;}
+  .vip-tab.active{color:var(--turq); border-color:var(--turq);}
+  .vip-body{flex:1; overflow-y:auto; padding:12px; display:flex; flex-direction:column; gap:10px;}
+  .chat-msg{font-size:12.5px; line-height:1.5;}
+  .chat-msg .u{font-weight:700; margin-right:5px;}
+  .chat-msg .u.vipname{color:var(--gold);}
+  .chat-msg .u.modname{color:var(--turq);}
+  .chat-locked{
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+    color:var(--text-low); font-size:12.5px; text-align:center; height:100%; padding:30px 14px;
+  }
+  .members-list{display:flex; flex-direction:column; gap:2px;}
+  .mgroup-label{font-size:10.5px; text-transform:none; color:var(--text-low); font-weight:700; letter-spacing:.3px; margin:10px 0 4px;}
+  .member-row{display:flex; align-items:center; gap:8px; padding:5px 4px; border-radius:8px; font-size:12.5px;}
+  .member-row:hover{background:rgba(255,255,255,.03);}
+  .mdot{width:6px;height:6px;border-radius:50%; background:#3ddc84;}
+  .voice-active{display:flex; flex-direction:column; align-items:center; gap:14px; padding:26px 10px;}
+  .voice-av{width:56px;height:56px;border-radius:50%; background:linear-gradient(135deg,var(--turq),#0A6E68); display:grid;place-items:center; font-weight:700; color:var(--bg-0); box-shadow:0 0 0 4px rgba(10,255,239,.15);}
+  .voice-av.speaking{box-shadow:0 0 0 4px rgba(10,255,239,.4); animation:pulse2 1s infinite;}
+  @keyframes pulse2{0%,100%{box-shadow:0 0 0 4px rgba(10,255,239,.4);}50%{box-shadow:0 0 0 8px rgba(10,255,239,.15);}}
+  .vip-foot{border-top:1px solid var(--line); padding:10px; display:flex; flex-direction:column; gap:8px;}
+  .vip-foot .btn{width:100%; justify-content:center;}
+
+  /* ============ THUNDER PLACE ============ */
+  .place-tabs{display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap;}
+  .place-tab{padding:8px 14px; border-radius:99px; font-size:12.5px; font-weight:600; border:1px solid var(--line); color:var(--text-mid);}
+  .place-tab.active{color:var(--turq); border-color:var(--line-strong); background:rgba(10,255,239,.06);}
+  .feed-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px;}
+  .sponsored{border-color:rgba(255,212,71,.4);}
+  .sponsored-tag{position:absolute; top:9px; left:9px; background:rgba(255,212,71,.14); color:var(--gold); border:1px solid rgba(255,212,71,.4); font-size:10px; font-weight:700; padding:2px 7px; border-radius:6px;}
+  .feed-media{height:120px; position:relative; background:linear-gradient(150deg,#1B2733,#0E1319);}
+  .feed-body{padding:12px 13px;}
+  .feed-body .n{font-size:13px; font-weight:600;}
+  .feed-body .p{font-size:13px; color:var(--turq); font-weight:700; margin-top:4px;}
+  .feed-body .c{font-size:11px; color:var(--text-low); margin-top:2px;}
+
+  .ads-panel-card{padding:20px; margin-top:8px;}
+  .ads-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin:16px 0;}
+  .stat-box{border:1px solid var(--line); border-radius:var(--radius-m); padding:14px;}
+  .stat-box .lbl{font-size:11px; color:var(--text-mid);}
+  .stat-box .val{font-size:19px; font-weight:700; margin-top:4px;}
+  .ad-row{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:13px 14px; border:1px solid var(--line); border-radius:var(--radius-m); margin-bottom:10px; flex-wrap:wrap;}
+  .ad-row .meta{display:flex; flex-direction:column; gap:2px;}
+  .ad-row .meta .t{font-size:13px; font-weight:600;}
+  .ad-row .meta .s{font-size:11.5px; color:var(--text-mid);}
+  .ad-model{font-size:10.5px; padding:2px 7px; border-radius:6px; border:1px solid var(--line-strong); color:var(--turq);}
+
+  /* ============ THUNDER VIPS ============ */
+  .vips-layout{display:grid; grid-template-columns:1fr; gap:16px;}
+  @media(min-width:860px){ .vips-layout{grid-template-columns:260px 1fr;} }
+  .servers-list{display:flex; flex-direction:column; gap:8px;}
+  .server-row{display:flex; align-items:center; gap:11px; padding:11px; border:1px solid var(--line); border-radius:var(--radius-m); background:var(--bg-2);}
+  .server-row.active{border-color:var(--line-strong); box-shadow:inset 0 0 0 1px var(--line-strong);}
+  .server-ic{width:38px;height:38px; border-radius:11px; background:linear-gradient(135deg,#1D2731,#0E1319); display:grid; place-items:center; font-size:16px; flex:0 0 auto; border:1px solid var(--line);}
+  .server-meta .n{font-size:13px; font-weight:600;}
+  .server-meta .s{font-size:11px; color:var(--text-mid);}
+  .channels-card{padding:16px; min-height:400px;}
+  .channel-group{margin-bottom:16px;}
+  .channel-group .g-title{font-size:11px; color:var(--text-low); font-weight:700; margin-bottom:6px;}
+  .channel-row{display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:9px; font-size:13px; color:var(--text-mid); cursor:pointer;}
+  .channel-row:hover{background:rgba(255,255,255,.03); color:var(--text-hi);}
+  .channel-row.locked{color:var(--gold);}
+  .channels-head{padding-bottom:12px; margin-bottom:14px; border-bottom:1px solid var(--line);}
+  .channels-head .ch-name{font-size:15px; font-weight:700;}
+  .channels-head .ch-topic{font-size:12px; color:var(--text-mid); margin-top:3px;}
+  .server-row{cursor:pointer;}
+
+  /* ============ BILLETERA ============ */
+  .wallet-cards{display:grid; grid-template-columns:1fr; gap:16px;}
+  @media(min-width:720px){ .wallet-cards{grid-template-columns:1fr 1fr;} }
+  .coin-card{padding:22px; position:relative; overflow:hidden;}
+  .coin-card.green::before{content:"";position:absolute; inset:0; background:radial-gradient(circle at 90% 0%, rgba(10,255,239,.14), transparent 60%);}
+  .coin-card.gold::before{content:"";position:absolute; inset:0; background:radial-gradient(circle at 90% 0%, rgba(255,212,71,.16), transparent 60%);}
+  .coin-card .lbl{font-size:12.5px; color:var(--text-mid); position:relative;}
+  .coin-card .amt{font-size:30px; font-weight:700; margin:8px 0 14px; position:relative;}
+  .coin-card.green .amt{color:var(--turq);}
+  .coin-card.gold .amt{color:var(--gold);}
+  .coin-card .row{display:flex; gap:10px; position:relative; flex-wrap:wrap;}
+
+  .cashout-card{padding:20px; margin-top:18px;}
+  .co-row{display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--line); font-size:13px;}
+  .co-row:last-child{border-bottom:none;}
+  .co-row .l{color:var(--text-mid);}
+  .co-row .r{font-weight:600;}
+  .kyc-tag{font-size:11px; padding:3px 8px; border-radius:6px; background:rgba(61,220,132,.12); color:#3ddc84; border:1px solid rgba(61,220,132,.3);}
+
+  /* ============ PAQUETES DE MONEDAS ============ */
+  .pkg-row{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:14px 16px; border:1px solid var(--line); border-radius:var(--radius-m); background:var(--bg-2); flex-wrap:wrap;
+  }
+  .pkg-row .pkg-info .amt2{font-size:16px; font-weight:700; color:var(--gold);}
+  .pkg-row .pkg-info .price2{font-size:12px; color:var(--text-mid); margin-top:2px;}
+  .pkg-row .pkg-btns{display:flex; gap:8px;}
+
+  /* ============ AUTH MODAL ============ */
+  .auth-backdrop{
+    position:fixed; inset:0; z-index:200; display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(1200px 700px at 20% 0%, rgba(10,255,239,.08), transparent 55%), var(--bg-0);
+    padding:20px;
+  }
+  .auth-backdrop.hidden{display:none;}
+  .auth-card{width:100%; max-width:380px; background:var(--bg-2); border:1px solid var(--line-strong); border-radius:var(--radius-l); padding:26px; box-shadow:0 20px 60px rgba(0,0,0,.5);}
+  .auth-brand{display:flex; flex-direction:column; align-items:center; gap:10px; font-family:'Space Grotesk'; font-weight:700; margin-bottom:20px;}
+  .auth-brand .logo-icon{width:56px; height:56px;}
+  .auth-brand .wordmark{font-size:19px; letter-spacing:4px;}
+  .auth-tabs{display:flex; gap:6px; margin-bottom:18px; background:var(--bg-1); padding:4px; border-radius:11px;}
+  .auth-tab{flex:1; text-align:center; padding:8px; border-radius:8px; font-size:12.5px; font-weight:600; color:var(--text-mid);}
+  .auth-tab.active{background:var(--bg-2); color:var(--turq); box-shadow:0 0 0 1px var(--line-strong);}
+  .auth-field{margin-bottom:12px;}
+  .auth-field label{display:block; font-size:11.5px; color:var(--text-mid); margin-bottom:5px;}
+  .auth-error{color:var(--danger); font-size:12px; margin:-4px 0 12px; min-height:14px;}
+  .role-toggle{display:flex; gap:8px; margin-bottom:14px;}
+  .role-opt{flex:1; text-align:center; padding:9px; border-radius:9px; border:1px solid var(--line); font-size:12px; font-weight:600; color:var(--text-mid); cursor:pointer;}
+  .role-opt.active{border-color:var(--line-strong); color:var(--turq); background:rgba(10,255,239,.06);}
+  .auth-foot{font-size:11.5px; color:var(--text-low); text-align:center; margin-top:14px;}
+
+  /* ============ CHAT INPUT (live + VIP) ============ */
+  .chat-input-row{display:flex; gap:8px; padding:10px; border-top:1px solid var(--line);}
+  .chat-input-row input{
+    flex:1; background:var(--bg-1); border:1px solid var(--line); border-radius:10px;
+    padding:9px 12px; color:var(--text-hi); font-size:12.5px; font-family:inherit;
+  }
+  .chat-input-row input:focus{outline:none; border-color:var(--line-strong); box-shadow:0 0 0 3px rgba(10,255,239,.08);}
+  .chat-input-row input::placeholder{color:var(--text-low);}
+  .chat-send-btn{
+    width:36px;height:36px;border-radius:10px;background:var(--turq);color:var(--bg-0);
+    display:grid;place-items:center;font-weight:700; flex:0 0 auto; transition:box-shadow .15s;
+  }
+  .chat-send-btn:hover{box-shadow:var(--glow);}
+  .chat-msg.own .u{color:var(--turq);}
+
+  /* ============ GO LIVE SHEET ============ */
+  .text-input{
+    width:100%; background:var(--bg-1); border:1px solid var(--line); border-radius:10px;
+    padding:10px 12px; color:var(--text-hi); font-size:12.5px; font-family:inherit;
+  }
+  .text-input:focus{outline:none; border-color:var(--line-strong);}
+  .text-input::placeholder{color:var(--text-low);}
+  .sources-list{display:flex; flex-direction:column; gap:8px;}
+  .source-row{display:flex; gap:8px; align-items:center;}
+  .remove-src{width:34px;height:34px;border-radius:9px;background:var(--bg-2); border:1px solid var(--line); display:grid; place-items:center; color:var(--text-mid); flex:0 0 auto;}
+  .remove-src:hover{color:var(--danger); border-color:rgba(255,93,108,.4);}
+  .overlay-check{display:flex; align-items:center; gap:9px; font-size:12.5px; color:var(--text-mid); margin-bottom:10px; cursor:pointer;}
+  .overlay-check input{accent-color:var(--turq); width:15px; height:15px; flex:0 0 auto;}
+  .sheet-subtitle{font-size:12.5px; color:var(--text-mid); margin-bottom:16px; line-height:1.5;}
+  .sheet-section-title{font-size:13px; font-weight:700; margin-bottom:10px;}
+
+  /* ============ TOAST ============ */
+  .toast{
+    position:fixed; left:50%; bottom:88px; transform:translateX(-50%) translateY(14px);
+    background:var(--bg-2); border:1px solid var(--line-strong); color:var(--text-hi);
+    padding:11px 20px; border-radius:99px; font-size:12.5px; font-weight:600;
+    box-shadow:0 10px 30px rgba(0,0,0,.5); opacity:0; pointer-events:none;
+    transition:opacity .22s ease, transform .22s ease; z-index:120; max-width:88vw; text-align:center;
+  }
+  @media (min-width:900px){ .toast{bottom:26px;} }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  /* misc */
+  .flex{display:flex;} .items-center{align-items:center;} .gap-8{gap:8px;}
+  .muted{color:var(--text-mid);}
+  .mt-10{margin-top:10px;} .mt-16{margin-top:16px;} .mt-20{margin-top:20px;}
+  @media (max-width:1079px){ .vip-panel-wrap{display:none;} .vip-panel-wrap.show{display:block; margin-top:16px;} }
+</style>
+</head>
+<body>
+
+<!-- AUTH MODAL (real: registro/login contra el backend) -->
+<div class="auth-backdrop hidden" id="authBackdrop">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <svg class="logo-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <g fill="none" stroke="#0AFFEF" stroke-width="3.2" stroke-linecap="round">
+          <path d="M7 15 Q32 7 57 15"/><path d="M11 24 Q32 19 53 24"/>
+          <path d="M16 33 Q32 30 48 33"/><path d="M21 42 Q32 40 43 42"/>
+          <path d="M26 50 Q32 49 38 50"/>
+        </g>
+        <path d="M37 5 L24 32 L32 32 L27 59 L47 27 L37 27 Z" fill="#FFD447"/>
+      </svg>
+      <span class="wordmark">THUNDER</span>
+    </div>
+    <div class="auth-tabs">
+      <div class="auth-tab active" data-tab="login" onclick="setAuthTab('login')">Iniciar sesión</div>
+      <div class="auth-tab" data-tab="register" onclick="setAuthTab('register')">Crear cuenta</div>
+    </div>
+
+    <div id="authFormLogin">
+      <div class="auth-field"><label>Usuario o correo</label><input class="text-input" id="loginUser" placeholder="djmarea"></div>
+      <div class="auth-field"><label>Contraseña</label><input class="text-input" id="loginPass" type="password" placeholder="••••••••"></div>
+      <div class="auth-error" id="loginError"></div>
+      <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="doLogin()">Entrar ⚡</button>
+    </div>
+
+    <div id="authFormRegister" style="display:none;">
+      <div class="role-toggle">
+        <div class="role-opt active" data-role="espectador" onclick="setRegRole('espectador')">🙋 Espectador</div>
+        <div class="role-opt" data-role="creador" onclick="setRegRole('creador')">🎥 Creador</div>
+      </div>
+      <div class="auth-field"><label>Nombre de usuario</label><input class="text-input" id="regUser" placeholder="tu_usuario"></div>
+      <div class="auth-field"><label>Correo</label><input class="text-input" id="regEmail" placeholder="tucorreo@ejemplo.com"></div>
+      <div class="auth-field"><label>Contraseña (mín. 6 caracteres)</label><input class="text-input" id="regPass" type="password" placeholder="••••••••"></div>
+      <div class="auth-error" id="regError"></div>
+      <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="doRegister()">Crear cuenta ⚡</button>
+    </div>
+
+    <div class="auth-foot">Se registra de verdad en la base de datos del servidor — nada de esto es demo visual.</div>
+  </div>
+</div>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="brand">
+      <svg class="logo-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <g fill="none" stroke="#0AFFEF" stroke-width="3.2" stroke-linecap="round">
+          <path d="M7 15 Q32 7 57 15"/><path d="M11 24 Q32 19 53 24"/>
+          <path d="M16 33 Q32 30 48 33"/><path d="M21 42 Q32 40 43 42"/>
+          <path d="M26 50 Q32 49 38 50"/>
+        </g>
+        <path d="M37 5 L24 32 L32 32 L27 59 L47 27 L37 27 Z" fill="#FFD447"/>
+      </svg>
+      <span class="wordmark">THUNDER</span>
+    </div>
+    <div class="navlist">
+      <button class="navitem active" data-view="home"><span class="ic">🏠</span><span class="nav-label">Home</span></button>
+      <button class="navitem" data-view="place"><span class="ic">🛍️</span><span class="nav-label">Place</span></button>
+      <button class="navitem live" data-view="birds"><span class="ic">⚡</span><span class="nav-label">Vivos</span></button>
+      <button class="navitem" data-view="vips"><span class="ic">💬</span><span class="nav-label">Vips</span></button>
+      <button class="navitem" data-view="wallet"><span class="ic">👛</span><span class="nav-label">Billetera</span></button>
+    </div>
+    <div class="sidebar-foot">
+      <div class="avatar" id="sidebarAvatar">?</div>
+      <div class="who"><div class="name" id="sidebarName">Invitado</div><div class="role" id="sidebarRole">Sin sesión</div></div>
+      <button class="icon-btn" style="margin-left:auto;" onclick="doLogout()" title="Cerrar sesión">⏻</button>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- ===================== HOME ===================== -->
+    <section class="view active" id="view-home">
+      <div class="view-head">
+        <div><h1 id="homeGreeting">Buenas ⚡</h1><p>Lo más visto ahora mismo en Thunder</p></div>
+        <span class="pill" id="liveCountPill">🟢 0 en vivo</span>
+      </div>
+
+      <div class="grid-lives" id="liveGrid">
+        <div class="muted" style="padding:20px 4px;">Cargando transmisiones...</div>
+      </div>
+
+      <div class="section-title" style="justify-content:space-between;">
+        <span>🎬 Videos y VODs de la comunidad</span>
+        <button class="btn btn-sm" onclick="openVideoSheet()">+ Subir video</button>
+      </div>
+      <p class="muted" style="font-size:12px; margin:-8px 0 14px;">Sube tus partidas completas — 1, 2, 3, 4 horas o más. Se reproducen enteras, sin cortes.</p>
+      <div class="feed-grid" id="videoGrid">
+        <div class="muted" style="padding:10px 4px;">Cargando videos...</div>
+      </div>
+
+      <div class="section-title">🛍️ Destacado en Thunder Place</div>
+      <div class="place-strip">
+        <div class="prod-card"><div class="prod-media"></div><div class="prod-body"><div class="n">Audífonos gamer RGB</div><div class="p">S/ 149</div></div></div>
+        <div class="prod-card"><div class="prod-media"></div><div class="prod-body"><div class="n">Setup de streaming</div><div class="p">S/ 890</div></div></div>
+        <div class="prod-card"><div class="prod-media"></div><div class="prod-body"><div class="n">Diseño de logo</div><div class="p">Desde S/ 60</div></div></div>
+        <div class="prod-card"><div class="prod-media"></div><div class="prod-body"><div class="n">Figura coleccionable</div><div class="p">S/ 75</div></div></div>
+      </div>
+    </section>
+
+    <!-- ===================== THUNDER BIRDS (VIVO) ===================== -->
+    <section class="view" id="view-birds">
+      <div class="live-layout">
+        <div class="player-col">
+          <div class="player-topbar">
+            <button class="back-btn" onclick="goTo('home')">← Volver</button>
+            <div class="live-title"><span class="bolt-sm">⚡</span> THUNDER BIRDS</div>
+            <button class="btn btn-sm" onclick="openLiveSheet()">🎥 Iniciar transmisión</button>
+          </div>
+
+          <div class="stage" id="stage">
+            <div class="stage-watermark" id="stageWatermark">⚡</div>
+            <div id="stageMediaWrap" style="position:absolute; inset:0;"></div>
+
+            <div class="stage-hud-top">
+              <div class="streamer-chip">
+                <div class="av" id="streamerAv">--</div>
+                <div class="meta"><div class="n" id="streamerName">Elige un vivo</div><div class="v" id="streamerCat">—</div></div>
+              </div>
+              <div class="stage-badges">
+                <span class="live-badge-big" id="liveBadge"><span class="dot"></span>EN VIVO</span>
+                <span class="viewers-big">👁 <span id="viewerCount">0</span></span>
+              </div>
+            </div>
+
+            <div class="alert-bar" id="alertBar"></div>
+            <div class="vip-overlay" id="vipOverlay"><div class="bolt-big">⚡</div></div>
+            <div class="gift-dock" id="giftDock"></div>
+
+            <div class="stage-hud-bottom">
+              <div class="hud-left">⏱ <b>01:24:07</b></div>
+              <div class="hud-right">
+                <button class="icon-btn" id="volBtn" onclick="toggleVolume(this)">🔊</button>
+                <button class="icon-btn" onclick="toggleFullscreen()">⛶</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="action-bar">
+            <button class="action-item gift" onclick="openGiftSheet()">🎁 Regalos</button>
+            <button class="action-item chat-toggle" onclick="toggleVipPanel()">💬 Chat</button>
+            <button class="action-item sub" id="subActionBtn" onclick="toggleSubscription()">🔔 Suscribirse</button>
+            <button class="action-item" id="followBtn" onclick="toggleFollow(this)">❤️ Seguir</button>
+            <button class="action-item" onclick="shareLive()">↗ Compartir</button>
+            <button class="action-item ad-btn" onclick="goTo('place')">📢 Anuncio</button>
+          </div>
+        </div>
+
+        <div class="vip-panel-wrap" id="vipPanelWrap">
+          <div class="vip-panel">
+            <div class="vip-tabs">
+              <button class="vip-tab active" data-tab="general" onclick="setVipTab('general')">Chat general</button>
+              <button class="vip-tab" data-tab="vip" onclick="setVipTab('vip')">🔒 VIP-only</button>
+              <button class="vip-tab" data-tab="voz" onclick="setVipTab('voz')">🎙️ Voz</button>
+            </div>
+
+            <div class="vip-body" id="vipBody"></div>
+            <div class="chat-input-row" id="chatInputRow">
+              <input type="text" id="chatInput" placeholder="Escribe un mensaje..." maxlength="140" onkeydown="if(event.key==='Enter')sendChatMessage()">
+              <button class="chat-send-btn" onclick="sendChatMessage()">➤</button>
+            </div>
+
+            <div class="vip-foot">
+              <button class="btn btn-primary" onclick="openGiftSheet()">Comprar Gift 🎁</button>
+              <button class="btn btn-ghost" onclick="goTo('place')">Anuncio 📢</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== THUNDER PLACE ===================== -->
+    <section class="view" id="view-place">
+      <div class="view-head">
+        <div><h1>Thunder Place</h1><p>Publica, vende y promociona sin salir de la app</p></div>
+        <button class="btn btn-primary" onclick="switchPlaceTab('publish')">+ Publicar</button>
+      </div>
+
+      <div class="place-tabs">
+        <button class="place-tab active" data-ptab="feed" onclick="switchPlaceTab('feed')">Feed</button>
+        <button class="place-tab" data-ptab="publish" onclick="switchPlaceTab('publish')">Publicar</button>
+        <button class="place-tab" data-ptab="ads" onclick="switchPlaceTab('ads')">Gestor de anuncios</button>
+      </div>
+
+      <!-- FEED -->
+      <div id="place-feed">
+        <div class="feed-grid">
+          <div class="card sponsored" style="position:relative;">
+            <span class="sponsored-tag">Patrocinado</span>
+            <div class="feed-media"></div>
+            <div class="feed-body"><div class="n">Micrófono streaming Pro</div><div class="p">S/ 320</div><div class="c">Envío en 24h</div></div>
+          </div>
+          <div class="card" style="position:relative;">
+            <div class="feed-media"></div>
+            <div class="feed-body"><div class="n">Clases de edición de video</div><div class="p">S/ 50 / hora</div><div class="c">Servicio · online</div></div>
+          </div>
+          <div class="card" style="position:relative;">
+            <div class="feed-media"></div>
+            <div class="feed-body"><div class="n">Iluminación LED aro 18"</div><div class="p">S/ 120</div><div class="c">Stock: 6</div></div>
+          </div>
+          <div class="card" style="position:relative;">
+            <div class="feed-media"></div>
+            <div class="feed-body"><div class="n">Diseño de overlays Thunder</div><div class="p">Desde S/ 80</div><div class="c">Servicio digital</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PUBLISH -->
+      <div id="place-publish" style="display:none;">
+        <div class="card" style="padding:20px; max-width:520px;">
+          <h3 style="font-size:15px; margin-bottom:14px;">¿Qué vas a publicar?</h3>
+          <div class="flex gap-8 mt-10" style="flex-wrap:wrap;">
+            <button class="btn" style="flex:1;">📦 Producto físico</button>
+            <button class="btn" style="flex:1;">🛠️ Servicio</button>
+          </div>
+          <p class="muted mt-16" style="font-size:12.5px;">Sube fotos, describe tu producto o servicio y elige una categoría. Al final decides si tu publicación es estándar (gratis) o patrocinada.</p>
+          <div class="flex gap-8 mt-20">
+            <button class="btn btn-ghost" style="flex:1;" onclick="toast('Borrador guardado ✅')">Guardar borrador</button>
+            <button class="btn btn-primary" style="flex:1;" onclick="switchPlaceTab('ads')">Continuar →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADS MANAGER -->
+      <div id="place-ads" style="display:none;">
+        <div class="card ads-panel-card">
+          <div class="flex items-center" style="justify-content:space-between; flex-wrap:wrap; gap:10px;">
+            <h3 style="font-size:15px;">Gestor de anuncios</h3>
+          </div>
+          <div class="ads-grid">
+            <div class="stat-box"><div class="lbl">Impresiones</div><div class="val">0</div></div>
+            <div class="stat-box"><div class="lbl">Clics</div><div class="val">0</div></div>
+            <div class="stat-box"><div class="lbl">CTR</div><div class="val">0%</div></div>
+            <div class="stat-box"><div class="lbl">Gasto acumulado</div><div class="val">S/ 0</div></div>
+          </div>
+
+          <div class="mt-20" style="border-top:1px solid var(--line); padding-top:16px;">
+            <div class="sheet-section-title">Publicar nuevo anuncio</div>
+            <div class="auth-field"><label>Título</label><input class="text-input" id="adTitle" placeholder="Ej: Banner — Micrófono Pro"></div>
+            <div class="auth-field"><label>Enlace de destino</label><input class="text-input" id="adUrl" placeholder="https://..."></div>
+            <div class="auth-field"><label>Modelo de cobro</label>
+              <select class="text-input" id="adModel">
+                <option value="cpc">CPC — pago por clic</option>
+                <option value="cpm">CPM — pago por cada mil vistas</option>
+              </select>
+            </div>
+            <button class="btn btn-gold btn-sm" onclick="createAd()">+ Publicar anuncio</button>
+          </div>
+
+          <div class="mt-20" id="adsRows"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== THUNDER VIPS ===================== -->
+    <section class="view" id="view-vips">
+      <div class="view-head">
+        <div><h1>Thunder Vips</h1><p>Tus comunidades, canales y voz en tiempo real</p></div>
+      </div>
+      <div class="vips-layout">
+        <div class="servers-list">
+          <div class="server-row active" onclick="selectServer(this,'DJ Marea Club','🌩️ Sesión especial de tormenta eléctrica esta noche')"><div class="server-ic">🎧</div><div class="server-meta"><div class="n">DJ Marea Club</div><div class="s">1,204 miembros</div></div></div>
+          <div class="server-row" onclick="selectServer(this,'ClanTormenta','⛈️ Torneo interno — modo tormenta activado')"><div class="server-ic">🎮</div><div class="server-meta"><div class="n">ClanTormenta</div><div class="s">560 miembros</div></div></div>
+          <div class="server-row" onclick="selectServer(this,'Sabores del Sur','🍲 Receta de la semana en el canal de recetas')"><div class="server-ic">🍳</div><div class="server-meta"><div class="n">Sabores del Sur</div><div class="s">318 miembros</div></div></div>
+          <div class="server-row" onclick="selectServer(this,'Valeria N. — Charlas','💬 Hoy: preguntas y respuestas en vivo')"><div class="server-ic">💬</div><div class="server-meta"><div class="n">Valeria N. — Charlas</div><div class="s">2,011 miembros</div></div></div>
+        </div>
+
+        <div class="card channels-card">
+          <div class="channels-head">
+            <div class="ch-name" id="chName">DJ Marea Club</div>
+            <div class="ch-topic" id="chTopic">🌩️ Sesión especial de tormenta eléctrica esta noche</div>
+          </div>
+          <div class="channel-group">
+            <div class="g-title">CANALES DE TEXTO</div>
+            <div class="channel-row" onclick="openChannel('#general')">#️⃣ general</div>
+            <div class="channel-row" onclick="openChannel('#recomendaciones-de-tracks')">#️⃣ recomendaciones-de-tracks</div>
+            <div class="channel-row locked" onclick="lockedChannel()">🔒 solo-vips</div>
+          </div>
+          <div class="channel-group">
+            <div class="g-title">CANALES DE VOZ</div>
+            <div class="channel-row" onclick="openChannel('🎙️ Voz del club')">🎙️ Voz del club (8 conectados)</div>
+            <div class="channel-row locked" onclick="lockedChannel()">🔒 Voz VIP</div>
+          </div>
+          <div class="channel-group">
+            <div class="g-title">EN VIVO AHORA</div>
+            <div class="channel-row" onclick="goTo('birds')" style="color:var(--turq);">⚡ Ir al vivo de DJ Marea →</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== BILLETERA ===================== -->
+    <section class="view" id="view-wallet">
+      <div class="view-head">
+        <div><h1>Billetera</h1><p>Tu saldo en Thunder, en un solo lugar</p></div>
+        <span class="kyc-tag" id="kycTag" style="display:none;">KYC verificado ✓</span>
+      </div>
+
+      <div class="wallet-cards">
+        <div class="card coin-card green">
+          <div class="lbl">🟢 Monedas Verdes</div>
+          <div class="amt" id="greenAmt">0</div>
+          <div class="row"><button class="btn btn-sm" onclick="toast('Historial disponible próximamente')">Ver historial</button><button class="btn btn-sm" onclick="earnWatching()">Ganar viendo vivos</button></div>
+        </div>
+        <div class="card coin-card gold">
+          <div class="lbl">🟡 Thunderbolt Dorados</div>
+          <div class="amt" id="goldAmt">0</div>
+          <div class="row"><button class="btn btn-gold btn-sm" onclick="buyGold()">Comprar más</button><button class="btn btn-sm" onclick="toast('Historial disponible próximamente')">Ver historial</button></div>
+        </div>
+      </div>
+
+      <div class="card cashout-card">
+        <h3 style="font-size:14.5px; margin-bottom:6px;">Panel de cobro — Solo creadores</h3>
+        <p class="muted" style="font-size:12px; margin-bottom:6px;">Los regalos con Thunderbolt Dorados se convierten a dinero real. Necesitas verificar tu identidad (KYC) para canjear.</p>
+        <div class="co-row"><span class="l">Balance canjeable</span><span class="r" id="cashoutAmt">S/ 0.00 <span id="cashoutUsd" class="muted" style="font-weight:500;"></span></span></div>
+        <div class="co-row"><span class="l">Comisión de plataforma</span><span class="r">25%</span></div>
+        <div class="co-row"><span class="l">Monto mínimo de canje</span><span class="r">S/ 100</span></div>
+        <div class="flex gap-8 mt-16">
+          <button class="btn btn-ghost" style="flex:1;" onclick="verifyKyc()">Verificar KYC</button>
+          <button class="btn btn-primary" style="flex:1;" onclick="requestCashout()">Canjear a dinero real →</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navegación principal">
+    <button class="bn-item active" data-view="home"><span class="ic">🏠</span>Home</button>
+    <button class="bn-item" data-view="place"><span class="ic">🛍️</span>Place</button>
+    <button class="bn-item live" data-view="birds"><span class="ic">⚡</span>Vivos</button>
+    <button class="bn-item" data-view="vips"><span class="ic">💬</span>Vips</button>
+    <button class="bn-item" data-view="wallet"><span class="ic">👛</span>Billetera</button>
+  </nav>
+</div>
+
+<!-- GIFT SHEET -->
+<div class="sheet-backdrop" id="sheetBackdrop" onclick="closeGiftSheet(event)">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-head"><h3>Tienda de regalos</h3><button class="close-x" onclick="closeGiftSheet()">✕</button></div>
+    <div class="gift-tiers">
+      <div class="tier-tab active" data-tier="basico" onclick="setGiftTier('basico')">Básico 🟢</div>
+      <div class="tier-tab" data-tier="medio" onclick="setGiftTier('medio')">Medio 🟡</div>
+      <div class="tier-tab" data-tier="vip" onclick="setGiftTier('vip')">VIP / Premium 🟡</div>
+    </div>
+    <div class="gift-grid" id="giftGrid"></div>
+  </div>
+</div>
+
+<!-- GO LIVE SHEET (sin OBS, multi-fuente, overlays) -->
+<div class="sheet-backdrop" id="liveSheetBackdrop" onclick="closeLiveSheet(event)">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-head"><h3>Iniciar transmisión</h3><button class="close-x" onclick="closeLiveSheet()">✕</button></div>
+    <p class="sheet-subtitle">Conéctate sin OBS: pega el enlace o ID de donde vas a transmitir (RTMP, YouTube, TikTok, Kick, etc.). Puedes agregar más de una fuente para transmitir varios vivos a la vez.</p>
+
+    <div class="sheet-section-title">Fuentes de transmisión</div>
+    <label class="overlay-check"><input type="checkbox" id="useCameraCheck"> 📷 Transmitir con mi cámara/mic ahora mismo (sin OBS, directo del navegador)</label>
+    <div class="sources-list" id="sourcesList"></div>
+    <button class="btn btn-sm mt-10" onclick="addSourceField()">+ Agregar otra fuente (enlace/ID)</button>
+
+    <div class="mt-20" style="border-top:1px solid var(--line); padding-top:16px;">
+      <div class="sheet-section-title">Overlays de la transmisión</div>
+      <label class="overlay-check"><input type="checkbox" id="ovGifts" checked> Overlay de regalos (esquina inferior + pantalla completa VIP)</label>
+      <label class="overlay-check"><input type="checkbox" id="ovAlert" checked> Barra de alerta Thunderbolt con nombre del donador</label>
+      <label class="overlay-check"><input type="checkbox" id="ovLogo"> Logo en la esquina del video</label>
+      <input type="text" id="logoUrl" class="text-input" placeholder="URL de tu logo (opcional)">
+    </div>
+
+    <button class="btn btn-primary mt-20" style="width:100%; justify-content:center;" onclick="publishLive()">Publicar transmisión ⚡</button>
+  </div>
+</div>
+
+<!-- SUBIR VIDEO / VOD (sin límite de duración: se reproduce completo) -->
+<div class="sheet-backdrop" id="videoSheetBackdrop" onclick="closeVideoSheet(event)">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-head"><h3>Subir video / VOD</h3><button class="close-x" onclick="closeVideoSheet()">✕</button></div>
+    <p class="sheet-subtitle">Pega el enlace de tu video (YouTube o un archivo .mp4 directo). Se reproduce completo, de principio a fin — sin ningún corte, dure lo que dure.</p>
+    <div class="auth-field"><label>Título</label><input class="text-input" id="vidTitle" placeholder="Ej: Ranked de 3 horas hasta subir a Diamante"></div>
+    <div class="auth-field"><label>Enlace del video</label><input class="text-input" id="vidUrl" placeholder="https://youtube.com/watch?v=... o .mp4"></div>
+    <div class="auth-field"><label>Duración</label>
+      <select class="text-input" id="vidDuration">
+        <option>1 hora</option><option>2 horas</option><option>3 horas</option><option>4 horas</option><option>4+ horas</option>
+      </select>
+    </div>
+    <div class="auth-field"><label>Categoría</label><input class="text-input" id="vidCategory" placeholder="Gaming, Música, Cocina..."></div>
+    <button class="btn btn-primary mt-10" style="width:100%; justify-content:center;" onclick="publishVideo()">Publicar video ⚡</button>
+  </div>
+</div>
+
+<!-- REPRODUCTOR DE VIDEO (sin cortes) -->
+<div class="sheet-backdrop" id="videoPlayerBackdrop" onclick="closeVideoPlayer(event)">
+  <div class="sheet" style="max-width:820px;" onclick="event.stopPropagation()">
+    <div class="sheet-head"><h3 id="playerTitle">Video</h3><button class="close-x" onclick="closeVideoPlayer()">✕</button></div>
+    <div id="playerMediaWrap" style="width:100%; aspect-ratio:16/9; background:#000; border-radius:12px; overflow:hidden;"></div>
+    <p class="muted mt-10" style="font-size:12px;" id="playerMeta"></p>
+  </div>
+</div>
+
+<!-- COMPRAR THUNDERBOLT DORADOS (MercadoPago en Perú / PayPal fuera de Perú) -->
+<div class="sheet-backdrop" id="goldSheetBackdrop" onclick="closeGoldSheet(event)">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-head"><h3>Comprar Thunderbolt Dorados</h3><button class="close-x" onclick="closeGoldSheet()">✕</button></div>
+    <p class="sheet-subtitle">En Perú paga con MercadoPago (Yape, tarjetas locales, en Soles). Fuera de Perú paga con PayPal (en dólares).</p>
+    <div id="goldPackages" style="display:flex; flex-direction:column; gap:10px;"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const API = ''; // mismo origen: el backend sirve también este HTML
+
+  // ---------- TOAST ----------
+  let toastTimer;
+  function toast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>t.classList.remove('show'), 2800);
+  }
+
+  // ---------- ESTADO GLOBAL ----------
+  let authToken = localStorage.getItem('thunder_token') || null;
+  let currentUser = null;
+  let socket = null;
+  let currentRoom = null;       // objeto de la sala que se está viendo
+  let currentVipTab = 'general';
+  let isSubscribed = false;
+  let inVoice = false;
+  let isMuted = false;
+  let giftsCatalog = [];
+  let cameraStream = null;
+
+  function authHeaders(){
+    return authToken ? { 'Authorization': 'Bearer ' + authToken } : {};
+  }
+  async function api(path, opts={}){
+    const res = await fetch(API + path, {
+      ...opts,
+      headers: { 'Content-Type': 'application/json', ...authHeaders(), ...(opts.headers||{}) },
+      body: opts.body ? JSON.stringify(opts.body) : undefined,
+    });
+    const data = await res.json().catch(()=>({}));
+    if(!res.ok) throw { status: res.status, ...data };
+    return data;
+  }
+
+  // ---------- AUTH MODAL ----------
+  function setAuthTab(tab){
+    document.querySelectorAll('.auth-tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===tab));
+    document.getElementById('authFormLogin').style.display = tab==='login' ? 'block':'none';
+    document.getElementById('authFormRegister').style.display = tab==='register' ? 'block':'none';
+  }
+  let regRole = 'espectador';
+  function setRegRole(role){
+    regRole = role;
+    document.querySelectorAll('.role-opt').forEach(o=>o.classList.toggle('active', o.dataset.role===role));
+  }
+  function showAuthModal(){ document.getElementById('authBackdrop').classList.remove('hidden'); }
+  function hideAuthModal(){ document.getElementById('authBackdrop').classList.add('hidden'); }
+
+  async function doLogin(){
+    const username = document.getElementById('loginUser').value.trim();
+    const password = document.getElementById('loginPass').value;
+    const errEl = document.getElementById('loginError');
+    errEl.textContent = '';
+    if(!username || !password){ errEl.textContent = 'Completa usuario y contraseña'; return; }
+    try{
+      const data = await api('/api/auth/login', { method:'POST', body:{ username, password } });
+      onAuthed(data);
+    }catch(e){ errEl.textContent = e.error || 'No se pudo iniciar sesión'; }
+  }
+  async function doRegister(){
+    const username = document.getElementById('regUser').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPass').value;
+    const errEl = document.getElementById('regError');
+    errEl.textContent = '';
+    if(!username || !email || !password){ errEl.textContent = 'Completa todos los campos'; return; }
+    try{
+      const data = await api('/api/auth/register', { method:'POST', body:{ username, email, password, role: regRole } });
+      onAuthed(data);
+      if(regRole==='creador') toast('Cuenta de creador creada — verifica tu KYC en Billetera para poder canjear');
+    }catch(e){ errEl.textContent = e.error || 'No se pudo crear la cuenta'; }
+  }
+  function onAuthed(data){
+    authToken = data.token;
+    currentUser = data.user;
+    localStorage.setItem('thunder_token', authToken);
+    hideAuthModal();
+    initApp();
+  }
+  function doLogout(){
+    localStorage.removeItem('thunder_token');
+    authToken = null; currentUser = null;
+    if(socket) socket.disconnect();
+    location.reload();
+  }
+
+  function renderProfile(){
+    if(!currentUser) return;
+    document.getElementById('sidebarAvatar').textContent = currentUser.username.slice(0,2).toUpperCase();
+    document.getElementById('sidebarName').textContent = currentUser.username;
+    document.getElementById('sidebarRole').textContent =
+      currentUser.role==='creador' ? ('Creador' + (currentUser.kyc_verified ? ' · KYC ✓' : ' · KYC pendiente')) : 'Espectador';
+  }
+
+  // ---------- INIT ----------
+  async function initApp(){
+    try{
+      const me = await api('/api/auth/me');
+      currentUser = me.user;
+    }catch(e){
+      showAuthModal();
+      return;
+    }
+    renderProfile();
+    connectSocket();
+    loadGiftsCatalog();
+    loadHomeFeed();
+    loadVideos();
+    loadFxRate();
+  }
+
+  function connectSocket(){
+    socket = io({ auth: { token: authToken } });
+    socket.on('room:viewers', (d)=>{
+      if(currentRoom && d.roomId===currentRoom.id){
+        document.getElementById('viewerCount').textContent = d.count.toLocaleString('es-PE');
+      }
+    });
+    socket.on('chat:new', (d)=>{
+      if(!currentRoom || d.roomId!==currentRoom.id) return;
+      if(d.channel!==currentVipTab) return;
+      appendChatBubble(d.username, d.body, d.username===currentUser.username);
+    });
+    socket.on('gift:new', (d)=>{
+      if(!currentRoom || d.roomId!==currentRoom.id) return;
+      if(d.gift.tier==='vip'){ showVipOverlay(d.sender, d.gift.name + ' ' + d.gift.emoji, d.quantity); }
+      else{ spawnFloater(d.gift.emoji); }
+    });
+    socket.on('voice:update', (d)=>{ renderVoiceParticipants(d.participants); });
+    socket.on('voice:raised-hand', (d)=>{ toast('✋ ' + d.username + ' pidió la palabra'); });
+    socket.on('error:funds', (d)=> toast(d.message));
+    socket.on('error:auth', (d)=> toast(d.message));
+    socket.on('error:generic', (d)=> toast(d.message));
+    socket.on('room:live', (d)=>{ if(document.getElementById('view-home').classList.contains('active')) loadHomeFeed(); });
+  }
+
+  // ---------- HOME FEED (real) ----------
+  async function loadHomeFeed(){
+    const rows = await api('/api/rooms').catch(()=>[]);
+    const grid = document.getElementById('liveGrid');
+    const live = rows.filter(r=>r.status==='en_vivo');
+    document.getElementById('liveCountPill').textContent = `🟢 ${live.length} en vivo`;
+    if(currentUser) document.getElementById('homeGreeting').textContent = `Buenas, ${currentUser.username} ⚡`;
+    if(live.length===0){
+      grid.innerHTML = `<div class="card" style="padding:22px; grid-column:1/-1;">
+        <div style="font-weight:700; margin-bottom:6px;">Todavía nadie está en vivo ⚡</div>
+        <div class="muted" style="font-size:12.5px;">Sé el primero: entra a Thunder Birds y dale a "Iniciar transmisión".</div>
+        <button class="btn btn-primary mt-16" onclick="goTo('birds')">Ir a Thunder Birds →</button>
+      </div>`;
+      return;
+    }
+    grid.innerHTML = live.map(r => `
+      <div class="live-thumb" onclick="openRoom('${r.id}')">
+        <div class="thumb-media"><span class="badge-live"><span class="dot"></span>EN VIVO</span><span class="badge-view">👁 ${r.viewers}</span></div>
+        <div class="thumb-info"><div class="t">${escapeHtml(r.title)}</div><div class="s">${escapeHtml(r.owner_username)} · ${escapeHtml(r.category)}</div></div>
+      </div>`).join('');
+  }
+
+  async function openRoom(roomId){
+    const room = await api('/api/rooms/'+roomId).catch(()=>null);
+    if(!room){ toast('Esa sala ya no existe'); return; }
+    currentRoom = room;
+    document.getElementById('streamerAv').textContent = room.owner_username.slice(0,2).toUpperCase();
+    document.getElementById('streamerName').textContent = room.owner_username;
+    document.getElementById('streamerCat').textContent = room.category;
+    document.getElementById('viewerCount').textContent = room.viewers;
+    document.getElementById('liveBadge').style.display = room.status==='en_vivo' ? 'flex' : 'none';
+    renderStageMedia(room.source_urls || []);
+    socket.emit('room:join', { roomId: room.id });
+    const subState = await api('/api/rooms/'+roomId+'/subscribed').catch(()=>({subscribed:false}));
+    isSubscribed = subState.subscribed;
+    updateSubButton();
+    await loadChatHistory('general');
+    goTo('birds');
+  }
+
+  // ---------- VIDEOS / VODs (sin límite de duración) ----------
+  async function loadVideos(){
+    const rows = await api('/api/videos').catch(()=>[]);
+    const grid = document.getElementById('videoGrid');
+    if(rows.length===0){
+      grid.innerHTML = `<div class="muted" style="padding:10px 4px;">Todavía no hay videos publicados. ¡Sube el primero!</div>`;
+      return;
+    }
+    grid.innerHTML = rows.map(v => `
+      <div class="card" style="position:relative; cursor:pointer;" onclick='openVideoPlayer(${JSON.stringify(v).replace(/'/g,"&apos;")})'>
+        <div class="feed-media"><span class="badge-view" style="left:9px; right:auto;">⏱ ${escapeHtml(v.duration_label)}</span><span class="badge-view">👁 ${v.views}</span></div>
+        <div class="feed-body"><div class="n">${escapeHtml(v.title)}</div><div class="c">${escapeHtml(v.owner_username)} · ${escapeHtml(v.category)}</div></div>
+      </div>`).join('');
+  }
+  function openVideoSheet(){ document.getElementById('videoSheetBackdrop').classList.add('show'); }
+  function closeVideoSheet(){ document.getElementById('videoSheetBackdrop').classList.remove('show'); }
+  async function publishVideo(){
+    const title = document.getElementById('vidTitle').value.trim();
+    const videoUrl = document.getElementById('vidUrl').value.trim();
+    const durationLabel = document.getElementById('vidDuration').value;
+    const category = document.getElementById('vidCategory').value.trim();
+    if(!title || !videoUrl){ toast('Completa el título y el enlace del video'); return; }
+    try{
+      await api('/api/videos', { method:'POST', body:{ title, videoUrl, durationLabel, category } });
+      closeVideoSheet();
+      document.getElementById('vidTitle').value=''; document.getElementById('vidUrl').value=''; document.getElementById('vidCategory').value='';
+      toast('Video publicado — se reproduce completo, sin cortes ⚡');
+      loadVideos();
+    }catch(e){ toast(e.error || 'No se pudo publicar el video'); }
+  }
+  function openVideoPlayer(v){
+    document.getElementById('playerTitle').textContent = v.title;
+    document.getElementById('playerMeta').textContent = `${v.owner_username} · ${v.category} · Duración: ${v.duration_label} (se reproduce completa)`;
+    const wrap = document.getElementById('playerMediaWrap');
+    const embed = toEmbedUrl(v.video_url);
+    if(embed){
+      wrap.innerHTML = `<iframe src="${embed}" style="width:100%;height:100%;border:0;" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+    } else if(/\.(mp4|webm|ogg)(\?|$)/i.test(v.video_url)) {
+      wrap.innerHTML = `<video src="${v.video_url}" controls autoplay style="width:100%;height:100%;"></video>`;
+    } else {
+      wrap.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-mid); font-size:12.5px; padding:20px; text-align:center;">No se pudo incrustar este enlace directamente. <a href="${v.video_url}" target="_blank" style="color:var(--turq); margin-left:4px;">Abrir en una pestaña nueva →</a></div>`;
+    }
+    document.getElementById('videoPlayerBackdrop').classList.add('show');
+    api('/api/videos/'+v.id+'/view', { method:'POST' }).catch(()=>{});
+  }
+  function closeVideoPlayer(){
+    document.getElementById('videoPlayerBackdrop').classList.remove('show');
+    document.getElementById('playerMediaWrap').innerHTML = ''; // detiene la reproducción al cerrar
+  }
+
+  // Muestra la fuente de video: si es un enlace embebible (YouTube) se incrusta real;
+  // si no, se avisa que necesita un servidor de medios (ver config.js -> STREAMING.SFU_URL)
+  function renderStageMedia(sources){
+    const wrap = document.getElementById('stageMediaWrap');
+    const watermark = document.getElementById('stageWatermark');
+    wrap.innerHTML = '';
+    if(!sources || sources.length===0){ watermark.style.display='grid'; return; }
+    watermark.style.display = 'none';
+    const embeds = sources.map(toEmbedUrl).filter(Boolean);
+    if(embeds.length>0){
+      wrap.innerHTML = `<iframe src="${embeds[0]}" style="width:100%;height:100%;border:0;" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+    } else {
+      wrap.innerHTML = `<div style="position:absolute; inset:0; display:grid; place-items:center; text-align:center; padding:20px; color:var(--text-mid); font-size:12.5px;">
+        Fuente conectada: <b style="color:var(--text-hi); word-break:break-all;">&nbsp;${escapeHtml(sources[0])}</b><br><br>
+        Para que esto se vea como video en vivo real ante muchos espectadores, conecta un servidor de medios (RTMP/WebRTC) en <b>config.js → STREAMING</b>.
+      </div>`;
+    }
+  }
+  function toEmbedUrl(url){
+    try{
+      const yt = url.match(/(?:youtu\.be\/|watch\?v=|live\/)([\w-]{6,})/);
+      if(yt) return 'https://www.youtube.com/embed/' + yt[1] + '?autoplay=1&mute=1';
+    }catch(e){}
+    return null;
+  }
+
+  // ---------- SUSCRIPCIÓN ----------
+  function updateSubButton(){
+    const btn = document.getElementById('subActionBtn');
+    btn.textContent = isSubscribed ? '⭐ Suscrito' : '🔔 Suscribirse';
+    btn.classList.toggle('active', isSubscribed);
+  }
+  async function toggleSubscription(){
+    if(!currentRoom) return;
+    if(isSubscribed){ toast('Ya estás suscrito a este canal'); return; }
+    await api('/api/rooms/'+currentRoom.id+'/subscribe', { method:'POST' }).catch(()=>{});
+    isSubscribed = true;
+    updateSubButton();
+    if(currentVipTab==='vip') setVipTab('vip');
+    toast('Te suscribiste ⭐');
+  }
+  function toggleFollow(btn){
+    const active = btn.classList.toggle('active');
+    btn.textContent = active ? '❤️ Siguiendo' : '❤️ Seguir';
+    btn.style.color = active ? 'var(--turq)' : '';
+  }
+  function shareLive(){
+    if(currentRoom) navigator.clipboard?.writeText(location.origin + '/#room=' + currentRoom.id).catch(()=>{});
+    toast('Enlace del vivo copiado 📋');
+  }
+  function toggleVolume(btn){ btn.textContent = btn.textContent.trim()==='🔊' ? '🔇' : '🔊'; }
+  function toggleFullscreen(){
+    const stage = document.getElementById('stage');
+    if(!document.fullscreenElement) stage.requestFullscreen?.().catch(()=>toast('Tu navegador bloqueó la pantalla completa'));
+    else document.exitFullscreen?.();
+  }
+  function toggleVipPanel(){ document.getElementById('vipPanelWrap').classList.toggle('show'); }
+
+  // ---------- CHAT REAL ----------
+  function escapeHtml(s){ const d=document.createElement('div'); d.textContent=String(s); return d.innerHTML; }
+  function appendChatBubble(username, body, own){
+    const container = document.getElementById('chatMessages');
+    if(!container) return;
+    const div = document.createElement('div');
+    div.className = 'chat-msg' + (own ? ' own':'');
+    div.innerHTML = `<span class="u">${escapeHtml(username)}</span>${escapeHtml(body)}`;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+  }
+  async function loadChatHistory(channel){
+    if(!currentRoom) return;
+    const rows = await api('/api/rooms/'+currentRoom.id+'/messages?channel='+channel).catch(()=>[]);
+    const html = rows.map(m=>`<div class="chat-msg${m.username===currentUser.username?' own':''}"><span class="u">${escapeHtml(m.username)}</span>${escapeHtml(m.body)}</div>`).join('');
+    return html;
+  }
+  function sendChatMessage(){
+    const input = document.getElementById('chatInput');
+    const msg = input.value.trim();
+    if(!msg || !currentRoom) return;
+    socket.emit('chat:send', { roomId: currentRoom.id, channel: currentVipTab, body: msg });
+    input.value = '';
+  }
+
+  // ---------- TABS DEL PANEL (chat general / vip / voz) ----------
+  async function setVipTab(tab){
+    currentVipTab = tab;
+    document.querySelectorAll('.vip-tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===tab));
+    const body = document.getElementById('vipBody');
+    const inputRow = document.getElementById('chatInputRow');
+
+    if(tab==='general'){
+      inputRow.style.display = 'flex';
+      document.getElementById('chatInput').placeholder = 'Escribe un mensaje...';
+      body.innerHTML = `<div id="chatMessages" style="display:flex; flex-direction:column; gap:8px;">${currentRoom ? (await loadChatHistory('general')) : ''}</div>`;
+      document.getElementById('chatMessages').scrollTop = 99999;
+
+    } else if(tab==='vip'){
+      if(isSubscribed){
+        inputRow.style.display = 'flex';
+        document.getElementById('chatInput').placeholder = 'Mensaje para el canal VIP...';
+        body.innerHTML = `<div class="mgroup-label">🔒 Chat exclusivo de suscriptores</div><div id="chatMessages" style="display:flex; flex-direction:column; gap:8px;">${currentRoom ? (await loadChatHistory('vip')) : ''}</div>`;
+      } else {
+        inputRow.style.display = 'none';
+        body.innerHTML = `<div class="chat-locked"><div style="font-size:26px;">🔒</div><div>Este canal es solo para suscriptores VIP.<br>Suscríbete para chatear y reaccionar aquí.</div><button class="btn btn-primary btn-sm" onclick="toggleSubscription()">Suscribirme</button></div>`;
+      }
+
+    } else { // voz
+      inputRow.style.display = 'none';
+      if(!inVoice){
+        body.innerHTML = `<div class="voice-active">
+          <div style="font-size:12.5px; color:var(--text-mid); text-align:center;">Únete para hablar en vivo con los demás miembros del canal.</div>
+          <button class="btn btn-primary btn-sm" onclick="joinVoice()">🎙️ Unirme a la voz</button>
+        </div>`;
+      } else {
+        renderVoiceParticipants([]);
+      }
+    }
+  }
+  function renderVoiceParticipants(list){
+    if(currentVipTab!=='voz' || !inVoice) return;
+    const body = document.getElementById('vipBody');
+    const avatars = list.map(p=>`<div class="voice-av ${!p.muted?'speaking':''}" style="width:40px;height:40px;font-size:12px;" title="${escapeHtml(p.username)}">${escapeHtml(p.username.slice(0,2).toUpperCase())}</div>`).join('');
+    body.innerHTML = `<div class="voice-active">
+      <div style="font-size:12.5px; color:var(--text-mid);">Canal de voz — ${list.length} conectado(s)</div>
+      <div class="flex gap-8" style="flex-wrap:wrap; justify-content:center;">${avatars}</div>
+      <div class="flex gap-8 mt-16" style="flex-wrap:wrap; justify-content:center;">
+        <button class="btn btn-sm" onclick="toggleMute()">${isMuted?'🔇 Activar mic':'🎙️ Silenciar'}</button>
+        <button class="btn btn-sm" onclick="raiseHand()">✋ Pedir palabra</button>
+        <button class="btn btn-sm" onclick="leaveVoice()" style="color:var(--danger);">Salir</button>
+      </div>
+    </div>`;
+  }
+  function joinVoice(){ if(!currentRoom) return; inVoice=true; socket.emit('voice:join',{roomId:currentRoom.id}); setVipTab('voz'); toast('Te uniste al canal de voz 🎙️'); }
+  function leaveVoice(){ if(!currentRoom) return; inVoice=false; isMuted=false; socket.emit('voice:leave',{roomId:currentRoom.id}); setVipTab('voz'); toast('Saliste del canal de voz'); }
+  function toggleMute(){ isMuted=!isMuted; socket.emit('voice:mute',{roomId:currentRoom.id, muted:isMuted}); }
+  function raiseHand(){ if(currentRoom) socket.emit('voice:raise-hand',{roomId:currentRoom.id}); toast('✋ Levantaste la mano'); }
+
+  // ---------- GIFT SHEET (catálogo real desde la BD) ----------
+  async function loadGiftsCatalog(){ giftsCatalog = await api('/api/gifts').catch(()=>[]); }
+  function setGiftTier(tier){
+    document.querySelectorAll('.tier-tab').forEach(t=>t.classList.toggle('active', t.dataset.tier===tier));
+    const grid = document.getElementById('giftGrid');
+    const list = giftsCatalog.filter(g=>g.tier===tier);
+    grid.innerHTML = list.map(g=>`
+      <div class="gift-item ${g.currency==='dorada'?'gold':'green'}" onclick="sendGift('${g.id}')">
+        <span class="em">${g.emoji}</span><span class="nm">${escapeHtml(g.name)}</span><div class="cost">${g.cost} ${g.currency==='dorada'?'🟡':'🟢'}</div>
+      </div>`).join('');
+  }
+  function openGiftSheet(){
+    if(!currentRoom){ toast('Entra primero a un vivo para enviar regalos'); return; }
+    document.getElementById('sheetBackdrop').classList.add('show');
+    setGiftTier('basico');
+  }
+  function closeGiftSheet(){ document.getElementById('sheetBackdrop').classList.remove('show'); }
+  function sendGift(giftId){
+    if(!currentRoom) return;
+    socket.emit('gift:send', { roomId: currentRoom.id, giftId, quantity: 1 });
+    closeGiftSheet();
+  }
+  function spawnFloater(em){
+    const dock = document.getElementById('giftDock');
+    const f = document.createElement('div');
+    f.className='floater'; f.textContent = em;
+    f.style.right = (Math.random()*70)+'px';
+    dock.appendChild(f);
+    setTimeout(()=>f.remove(), 2500);
+  }
+  let lastCombo = {key:null, count:0, ts:0};
+  function showVipOverlay(sender, giftName, qty){
+    const now = Date.now();
+    const key = sender+giftName;
+    if(lastCombo.key===key && now-lastCombo.ts < 5000){ lastCombo.count += qty; } else { lastCombo.count = qty; }
+    lastCombo.key=key; lastCombo.ts=now;
+    const overlay = document.getElementById('vipOverlay');
+    const bar = document.getElementById('alertBar');
+    bar.innerHTML = `⚡ <b>${escapeHtml(sender)}</b> envió ${giftName}${lastCombo.count>1 ? ' x'+lastCombo.count : ''}`;
+    overlay.classList.add('show'); bar.classList.add('show');
+    clearTimeout(window._vipTimer);
+    window._vipTimer = setTimeout(()=>{ overlay.classList.remove('show'); bar.classList.remove('show'); }, 4500);
+  }
+
+  // ---------- IR EN VIVO (sin OBS) ----------
+  let sourceCount = 0;
+  function addSourceField(){
+    sourceCount++;
+    const list = document.getElementById('sourcesList');
+    const row = document.createElement('div');
+    row.className = 'source-row';
+    row.innerHTML = `<input type="text" class="text-input" placeholder="Enlace o ID de la fuente #${sourceCount} (YouTube, TikTok, Kick, RTMP...)"><button class="remove-src" onclick="this.parentElement.remove()">✕</button>`;
+    list.appendChild(row);
+  }
+  function openLiveSheet(){
+    document.getElementById('liveSheetBackdrop').classList.add('show');
+    const list = document.getElementById('sourcesList');
+    if(list.children.length===0) addSourceField();
+  }
+  function closeLiveSheet(){ document.getElementById('liveSheetBackdrop').classList.remove('show'); }
+
+  async function ensureMyRoom(){
+    return api('/api/rooms', { method:'POST', body:{ title: 'Vivo de ' + currentUser.username, category:'General' } });
+  }
+
+  async function publishLive(){
+    const useCamera = document.getElementById('useCameraCheck').checked;
+    const inputs = Array.from(document.querySelectorAll('#sourcesList input')).map(i=>i.value.trim()).filter(Boolean);
+    const overlayGifts = document.getElementById('ovGifts').checked;
+    const overlayAlert = document.getElementById('ovAlert').checked;
+    const overlayLogoUrl = document.getElementById('logoUrl').value.trim();
+
+    if(!useCamera && inputs.length===0){
+      toast('Activa tu cámara o pega al menos un enlace/ID para transmitir');
+      return;
+    }
+    try{
+      const room = await ensureMyRoom();
+      const sources = useCamera ? ['camara-navegador:'+currentUser.username, ...inputs] : inputs;
+      await api('/api/rooms/'+room.id+'/go-live', { method:'POST', body:{ sources, overlayGifts, overlayAlert, overlayLogoUrl } });
+      closeLiveSheet();
+      currentRoom = await api('/api/rooms/'+room.id);
+      socket.emit('room:join', { roomId: room.id });
+      document.getElementById('streamerAv').textContent = currentUser.username.slice(0,2).toUpperCase();
+      document.getElementById('streamerName').textContent = currentUser.username;
+      document.getElementById('streamerCat').textContent = 'En vivo ahora';
+      document.getElementById('liveBadge').style.display = 'flex';
+      if(useCamera){ await startCameraPreview(); } else { renderStageMedia(inputs); }
+      goTo('birds');
+      toast('⚡ Tu transmisión ya está en vivo' + (inputs.length>1 ? ` (${inputs.length} fuentes)` : ''));
+    }catch(e){
+      toast(e.error || 'No se pudo publicar la transmisión');
+    }
+  }
+
+  async function startCameraPreview(){
+    const wrap = document.getElementById('stageMediaWrap');
+    document.getElementById('stageWatermark').style.display = 'none';
+    try{
+      cameraStream = await navigator.mediaDevices.getUserMedia({ video:true, audio:true });
+      wrap.innerHTML = '';
+      const video = document.createElement('video');
+      video.autoplay = true; video.muted = true; video.playsInline = true;
+      video.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+      video.srcObject = cameraStream;
+      wrap.appendChild(video);
+      toast('📷 Cámara conectada — así te ven ahora mismo (vista previa local)');
+    }catch(e){
+      wrap.innerHTML = `<div style="position:absolute; inset:0; display:grid; place-items:center; color:var(--text-mid); font-size:12.5px; text-align:center; padding:20px;">No se pudo acceder a tu cámara/micrófono. Revisa los permisos del navegador.</div>`;
+    }
+  }
+
+  // ---------- WALLET REAL ----------
+  async function loadWallet(){
+    const w = await api('/api/wallet').catch(()=>null);
+    if(!w) return;
+    document.getElementById('greenAmt').textContent = w.monedas_verdes.toLocaleString('es-PE');
+    document.getElementById('goldAmt').textContent = w.monedas_doradas.toLocaleString('es-PE');
+    document.getElementById('cashoutAmt').firstChild.textContent = 'S/ ' + w.balance_canjeable.toFixed(2) + ' ';
+    const usdEl = document.getElementById('cashoutUsd');
+    usdEl.textContent = (fxRate && w.balance_canjeable > 0) ? `(≈ $${(w.balance_canjeable * fxRate).toFixed(2)} USD)` : '';
+    document.getElementById('kycTag').style.display = w.kyc_verified ? 'inline-flex' : 'none';
+  }
+  async function earnWatching(){
+    const r = await api('/api/wallet/earn', { method:'POST' }).catch(()=>null);
+    if(r){ toast('+'+r.earned+' Monedas Verdes 🟢 por ver vivos'); loadWallet(); }
+  }
+  // ---------- COMPRA DE MONEDAS (MercadoPago + PayPal) ----------
+  let fxRate = null; // Soles -> Dólares, solo para mostrar el equivalente (no mueve dinero)
+  async function loadFxRate(){
+    const r = await api('/api/payments/fx-rate').catch(()=>({penToUsd:null}));
+    fxRate = r.penToUsd;
+  }
+  async function buyGold(){
+    document.getElementById('goldSheetBackdrop').classList.add('show');
+    const packages = await api('/api/payments/gold-packages').catch(()=>[]);
+    const box = document.getElementById('goldPackages');
+    box.innerHTML = packages.map(p => `
+      <div class="pkg-row">
+        <div class="pkg-info">
+          <div class="amt2">${p.gold.toLocaleString('es-PE')} 🟡</div>
+          <div class="price2">S/ ${p.price} · $${p.priceUSD} USD</div>
+        </div>
+        <div class="pkg-btns">
+          <button class="btn btn-sm" onclick="startCheckout('${p.id}','mercadopago')">🇵🇪 MercadoPago</button>
+          <button class="btn btn-gold btn-sm" onclick="startCheckout('${p.id}','paypal')">🌎 PayPal</button>
+        </div>
+      </div>`).join('');
+  }
+  function closeGoldSheet(){ document.getElementById('goldSheetBackdrop').classList.remove('show'); }
+  async function startCheckout(packageId, provider){
+    try{
+      const endpoint = provider==='paypal' ? '/api/payments/paypal/checkout' : '/api/payments/checkout';
+      const r = await api(endpoint, { method:'POST', body:{ packageId } });
+      closeGoldSheet();
+      window.open(r.checkoutUrl, '_blank');
+      toast(provider==='paypal' ? 'Te abrimos PayPal en otra pestaña 🌎' : 'Te abrimos MercadoPago en otra pestaña 🇵🇪');
+    }catch(e){
+      toast(e.hint || e.error || 'No se pudo iniciar el pago');
+    }
+  }
+  function checkPaymentReturn(){
+    const params = new URLSearchParams(location.search);
+    const pago = params.get('pago');
+    if(!pago) return;
+    const msgs = { exito:'✅ Pago aprobado — tus monedas ya se acreditaron', fallo:'❌ El pago no se completó', pendiente:'⏳ Tu pago está pendiente de confirmación', cancelado:'Pago cancelado', error:'Ocurrió un problema procesando el pago' };
+    toast(msgs[pago] || '');
+    window.history.replaceState({}, '', location.pathname);
+  }
+  async function requestCashout(){
+    try{
+      const r = await api('/api/wallet/cashout', { method:'POST' });
+      toast(r.message);
+      loadWallet();
+    }catch(e){ toast(e.error || 'No se pudo procesar el canje'); }
+  }
+  async function verifyKyc(){
+    await api('/api/auth/kyc/verify', { method:'POST' }).catch(()=>{});
+    const me = await api('/api/auth/me');
+    currentUser = me.user;
+    renderProfile();
+    loadWallet();
+    toast('KYC verificado — ya puedes canjear como creador');
+  }
+
+  // ---------- ADS MANAGER REAL ----------
+  async function loadAds(){
+    const rows = await api('/api/rooms/ads/mine').catch(()=>[]);
+    const box = document.getElementById('adsRows');
+    if(!box) return;
+    if(rows.length===0){ box.innerHTML = `<div class="muted" style="font-size:12.5px;">Aún no tienes anuncios publicados.</div>`; return; }
+    box.innerHTML = rows.map(a=>`
+      <div class="ad-row">
+        <div class="meta"><div class="t">${escapeHtml(a.title)}</div><div class="s">Destino: ${escapeHtml(a.destination_url)}</div></div>
+        <div class="flex items-center gap-8">
+          <span class="ad-model">${a.model.toUpperCase()}</span>
+          <button class="btn btn-sm" onclick="toast('Descargando creativo del anuncio ⬇️')">⬇️ Creativo</button>
+        </div>
+      </div>`).join('');
+  }
+  async function createAd(){
+    const title = document.getElementById('adTitle').value.trim();
+    const url = document.getElementById('adUrl').value.trim();
+    const model = document.getElementById('adModel').value;
+    if(!title || !url){ toast('Completa el título y el enlace de destino'); return; }
+    try{
+      await api('/api/rooms/ads', { method:'POST', body:{ title, model, placement:'banner', dailyBudget:20, destinationUrl:url } });
+      document.getElementById('adTitle').value=''; document.getElementById('adUrl').value='';
+      toast('Anuncio publicado ✅');
+      loadAds();
+    }catch(e){ toast(e.error || 'No se pudo crear el anuncio'); }
+  }
+
+  // ---------- NAV ----------
+  function goTo(view){
+    document.querySelectorAll('.navitem, .bn-item').forEach(n=>n.classList.toggle('active', n.dataset.view===view));
+    document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active', v.id==='view-'+view));
+    window.scrollTo({top:0, behavior:'smooth'});
+    if(view==='wallet') loadWallet();
+    if(view==='place') { switchPlaceTab('feed'); loadAds(); }
+  }
+  document.querySelectorAll('.navitem, .bn-item').forEach(n=>{
+    n.addEventListener('click', ()=>goTo(n.dataset.view));
+  });
+
+  function switchPlaceTab(tab){
+    document.querySelectorAll('.place-tab').forEach(t=>t.classList.toggle('active', t.dataset.ptab===tab));
+    ['feed','publish','ads'].forEach(t=>{
+      const el = document.getElementById('place-'+t);
+      if(el) el.style.display = (t===tab) ? '' : 'none';
+    });
+    if(tab==='ads') loadAds();
+  }
+  function openChannel(name){ toast('Abriendo ' + name); }
+  function lockedChannel(){ toast('Este canal es solo para suscriptores VIP 🔒'); }
+  function selectServer(el, name, topic){
+    document.querySelectorAll('.server-row').forEach(r=>r.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('chName').textContent = name;
+    document.getElementById('chTopic').textContent = topic;
+  }
+
+  // ---------- ARRANQUE ----------
+  checkPaymentReturn();
+  if(authToken){ initApp(); } else { showAuthModal(); }
+</script>
+
+</body>
+</html>

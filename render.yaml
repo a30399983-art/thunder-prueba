@@ -1,0 +1,30 @@
+# Configurado para el PLAN GRATIS de Render (sin disco persistente, que solo
+# viene en planes pagados). Esto significa: cada vez que actualices el
+# servicio o Render lo reinicie, la base de datos (usuarios, saldos, chat)
+# vuelve a empezar de cero. Perfecto para probar y lanzar ya mismo.
+#
+# Cuando quieras que los datos queden guardados para siempre, sube el plan
+# de este servicio a "Starter" (~7 USD/mes) en el panel de Render y agrega
+# esto al final del archivo (con la sangría correcta, dentro de "services:"):
+#
+#     disk:
+#       name: thunder-data
+#       mountPath: /opt/render/project/src/data
+#       sizeGB: 1
+#
+services:
+  - type: web
+    name: thunder
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        value: "*"
+      - key: NODE_VERSION
+        value: 20.11.0
+      - key: APP_BASE_URL
+        sync: false
