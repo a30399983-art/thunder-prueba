@@ -194,6 +194,7 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(config.PORT, () => {
-  console.log(`⚡ Thunder backend escuchando en http://localhost:${config.PORT}`);
+const PUERTO = process.env.PORT || config.PORT || 3000;
+server.listen(PUERTO, '0.0.0.0', () => {
+  console.log('✅ Thunder iniciado en el puerto', PUERTO);
 });
